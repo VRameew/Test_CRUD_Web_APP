@@ -69,3 +69,11 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         Возвращает first_name и last_name с пробелом между ними.
         """
         return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['user_name']),
+            models.Index(fields=['first_name']),
+            models.Index(fields=['last_name']),
+        ]

@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .views import create_task
 
 urlpatterns = [
-    [],
+    path('create_task', create_task, name='create_task'),
 ]

@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registration</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+Registration
+{% endblock %}
+{% block content %}
     <h2>Registration Form</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Register</button>
     </form>
-</body>
-</html>
+{% endblock %}

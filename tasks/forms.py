@@ -29,6 +29,10 @@ class TaskDeleteForm(forms.ModelForm):
 
 
 class CommentsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CommentsForm, self).__init__(*args, **kwargs)
+        self.fields['task'].widget.attrs['readonly'] = True  # Заблокировать поле task в форме
+
     class Meta:
         model = Comments
         fields = ['task', 'text']

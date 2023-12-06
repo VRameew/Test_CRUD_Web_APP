@@ -36,16 +36,30 @@ def edit_task(request, task_id):
     if request.method == 'POST':
         form = TaskEditForm(request.POST, instance=task)
         if form.is_valid():
-            form.save()
+            task = form.save(commit=False)  # Получаем объект Task из формы без сохранения в базу данных
+            task.save()  # Сохраняем изменения
+
+            # Обновляем статус задачи
+            status, created = TaskStatus.objects.get_or_create(task=task)
+            status.status = form.cleaned_data['status']  # Получаем новый статус из формы
+            status.save()
+
+            # Обновляем форму с обновленным объектом task и объектом status
+            form = TaskEditForm(instance=task)
+            form.fields['status'].initial = status.status  # Устанавливаем значение статуса в форме
+
             return redirect('tasks_list')
     else:
         form = TaskEditForm(instance=task)
+        status, created = TaskStatus.objects.get_or_create(task=task)
+        form.fields['status'].initial = status.status  # Устанавливаем значение статуса в форме
 
     return render(
         request,
         'edit_task.html',
         {'form': form,
          'task': task})
+
 
 
 @login_required
@@ -71,35 +85,36 @@ def delete_task(request, task_id):
 
 
 @login_required
-def create_comment(request):
+def create_comment(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
     if request.method == 'POST':
         form = CommentsForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user
+            comment.task = task
             comment.save()
-            return redirect('comments_list')
+            return redirect(f'/tasks/task_data/{task_id}')
     else:
-        form = CommentsForm()
+        form = CommentsForm(initial={'task': task})
 
     return render(
         request,
         'create_comment.html',
-        {'form': form})
+        {'form': form}
+    )
 
 
 @login_required
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comments, id=comment_id)
 
-    if request.user != comment.author:
-        return redirect('comments_list')
-
     if request.method == 'POST':
         form = CommentsEditForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('comments_list')
+            return redirect('tasks_list')
     else:
         form = CommentsEditForm(instance=comment)
 
@@ -114,14 +129,11 @@ def edit_comment(request, comment_id):
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comments, id=comment_id)
 
-    if request.user != comment.author:
-        return redirect('comments_list')
-
     if request.method == 'POST':
         form = CommentsDeleteForm(request.POST, instance=comment)
         if form.is_valid():
             comment.delete()
-            return redirect('comments_list')
+            return redirect('tasks_list')
     else:
         form = CommentsDeleteForm(instance=comment)
 
@@ -143,9 +155,12 @@ def tasks_list(request):
 
 @login_required
 def task_data(request, task_id):
-    task = Task.objects.filter(id=task_id)
-    status = Task.objects.select_related("TaskStatus").all
-    comments = Task.objects.select_related("Comments").all
+    task = Task.objects.filter(id=task_id).first()
+    print(task)
+    status = TaskStatus.objects.filter(task=task).first()
+    print(status)
+    comments = Comments.objects.filter(task=task)
+    print(comments)
     return render(request,
                   'task_data.html',
                   {

@@ -7,20 +7,22 @@ from django.contrib.auth.models import PermissionsMixin
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
-            raise ValueError('Данные пользователя обязательно должны содержать email')
+            raise ValueError("Данные пользователя должны содержать email")
         user = self.model(
-            email=self.normalize_email(email)
+            email=self.normalize_email(email),
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, password, user_name):
         user = self.create_user(
             email=email,
             password=password,
         )
+        user.user_name = user_name
         user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
@@ -61,8 +63,9 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'user_name'  # измените 'email' на 'user_name'
+    EMAIL_FIELD = 'email'  # опционально, если вы также хотите использовать поле email для аутентификации
+    REQUIRED_FIELDS = ['email']  # добавьте поле email в список REQUIRED_FIELDS
 
     def get_full_name(self):
         """

@@ -35,9 +35,9 @@ class TaskStatus(models.Model):
         ('В работе', 'В работе'),
         ('Завершена', 'Завершена'),
     )
-    task = models.ForeignKey(Task,
-                             on_delete=models.OneToOneField,
-                             db_index=True)
+    task = models.OneToOneField(Task,
+                                on_delete=models.CASCADE,
+                                db_index=True)
     status = models.CharField(max_length=15,
                               choices=tasks_status,
                               default='Не приступали',

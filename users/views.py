@@ -81,3 +81,7 @@ def change_password(request):
         'change_password.html',
         {'form': form},
     )
+
+
+def success(request):
+    return render(request, 'success.html')

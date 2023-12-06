@@ -9,12 +9,12 @@
     <a href="{% url 'home' %}">Домашняя страница</a> |
     <a href="{% url 'tasks_list' %}">Список задач</a> |
     {% if user.is_authenticated %}
-    <a href="{% url 'user_data_update' %}">{{ user.get_full_name }}</a> |
+    <a href="{% url 'user_data_update' %}">{{ user.get_full_name }}!</a> |
     <a href="{% url 'change_password' %}">Сменить пароль</a> |
     {% else %}
     <a href="{% url 'login' %}">Войдите</a> |
-    {% endif %}
     <a href="{% url 'registration' %}" >Зарегистрируйтесь</a> |
+    {% endif %}
 </div>
 <div align="center">
    {% block content %}{% endblock content %}

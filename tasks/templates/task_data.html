@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ task.text }}
+{% endblock %}
+{% block content %}
+<h1>{{ task.text }}</h1>
+<div>
+    <div align="left">
+        <a href="{% url 'edit_task' task_id=task.id %}"><h4>{{ status }}</h4></a>
+        <a href="{% url 'delete_task' task_id=task.id %}">Удалить</a>
+    </div>
+    <div align="right">
+        <a href="{% url 'create_comment' task_id=task.id %}">Создать комментарий</a>
+    </div>
+</div>
+
+<ul>
+    {% for comment in comments %}
+    <li>
+        <div>
+            <a>{{comment.text}}</a>
+            <div align="right">
+                <a href="{% url 'edit_comment' comment_id=comment.id %}">изменить</a>
+                <a href="{% url 'delete_comment' comment_id=comment.id %}">удалить</a>
+            </div>
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

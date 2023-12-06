@@ -53,6 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'CRUD.urls'
 AUTH_USER_MODEL = 'users.UserModel'
+LOGIN_URL = '/users/login'
 
 TEMPLATES = [
     {

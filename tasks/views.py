@@ -1,6 +1,6 @@
 from django.shortcuts import (render, get_object_or_404,
                               redirect)
-from .models import Task, Comments
+from .models import Task, Comments, TaskStatus
 from .forms import (TaskForm, TaskEditForm,
                     TaskDeleteForm, CommentsForm,
                     CommentsEditForm, CommentsDeleteForm)
@@ -130,3 +130,26 @@ def delete_comment(request, comment_id):
         'delete_comment.html',
         {'form': form,
          'comment': comment})
+
+
+@login_required
+def tasks_list(request):
+    tasks = Task.objects.filter(author=request.user)
+    return render(
+        request,
+        'tasks_list.html',
+        {'tasks': tasks})
+
+
+@login_required
+def task_data(request, task_id):
+    task = Task.objects.filter(id=task_id)
+    status = Task.objects.select_related("TaskStatus").all
+    comments = Task.objects.select_related("Comments").all
+    return render(request,
+                  'task_data.html',
+                  {
+                      'task': task,
+                      'status': status,
+                      'comments': comments,
+                  })

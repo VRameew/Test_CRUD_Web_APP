@@ -3,5 +3,12 @@
 Home
 {% endblock %}
 {% block content %}
-<h1>This is a Simple CRUD Task Meneger</h1>
+<h1>Это простое приложение CRUD Task Meneger</h1>
+<h2>Для начала работы вам требуется зарегистрироваться вы это можете сделать по ссылке ниже</h2>
+<button onclick="redirectToRegistration()">Регистрация</button>
+<script>
+function redirectToRegistration() {
+  window.location.href = "{% url 'registration' %}";
+}
+</script>
 {% endblock %}

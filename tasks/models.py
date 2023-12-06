@@ -35,7 +35,9 @@ class TaskStatus(models.Model):
         ('В работе', 'В работе'),
         ('Завершена', 'Завершена'),
     )
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task,
+                             on_delete=models.OneToOneField,
+                             db_index=True)
     status = models.CharField(max_length=15,
                               choices=tasks_status,
                               default='Не приступали',
@@ -47,14 +49,16 @@ class TaskStatus(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['status'])
+            models.Index(fields=['status']),
+            models.Index(fields=['task']),
         ]
 
 
 class Comments(models.Model):
     task = models.ForeignKey(Task,
                              default=None,
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE,
+                             db_index=True)
     text = models.TextField(db_index=True)
     date_created = models.DateTimeField(
         verbose_name='created',
@@ -66,5 +70,6 @@ class Comments(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['text'])
+            models.Index(fields=['text']),
+            models.Index(fields=['task']),
         ]

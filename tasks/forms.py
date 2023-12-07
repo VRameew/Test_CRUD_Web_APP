@@ -31,13 +31,13 @@ class TaskDeleteForm(forms.ModelForm):
 class CommentsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentsForm, self).__init__(*args, **kwargs)
-        self.fields['task'].widget.attrs['readonly'] = True  # Заблокировать поле task в форме
+        self.fields['task_comments_index_name_idx'].widget.attrs['readonly'] = True  # Заблокировать поле task в форме
 
     class Meta:
         model = Comments
-        fields = ['task', 'text']
+        fields = ['task_comments_index_name_idx', 'text']
         labels = {
-            'task': 'Задача',
+            'task_comments_index_name_idx': 'Задача',
             'text': 'Текст комментария'
         }
 
@@ -45,9 +45,9 @@ class CommentsForm(forms.ModelForm):
 class CommentsEditForm(forms.ModelForm):
     class Meta:
         model = Comments
-        fields = ['task', 'text']
+        fields = ['task_comments_index_name_idx', 'text']
         labels = {
-            'task': 'Задача',
+            'task_comments_index_name_idx': 'Задача',
             'text': 'Текст комментария'
         }
 

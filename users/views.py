@@ -1,9 +1,11 @@
-from django.contrib.auth import (authenticate,
-                                 login, update_session_auth_hash)
+from django.contrib.auth import (login, logout,
+                                 authenticate, SESSION_KEY, BACKEND_SESSION_KEY, HASH_SESSION_KEY)
 from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
 from .forms import (UserRegistrationForm, LoginForm,
-                    UserUpdateForm, CustomPasswordChangeForm)
+                    UserUpdateForm, NewPasswordChangeForm)
 from django.contrib.auth.decorators import login_required
+from .models import UserModel
 
 
 # Create your views here.
@@ -31,8 +33,11 @@ def user_login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
+            print(email)
             password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
+            print(password)
+            user = UserModel.objects.get(email=email)
+            print(user)
             if user is not None:
                 login(
                     request,
@@ -70,17 +75,30 @@ def user_update(request):
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        form = CustomPasswordChangeForm(request.user, request.POST)
+        form = NewPasswordChangeForm(request.user, data=request.POST)
+
         if form.is_valid():
-            form.save()
+            user = request.user
+            new_password = form.cleaned_data['new_password1']
+
+            user.password = make_password(new_password)
+            user.save()
+
+            # Аутентифицировать пользователя заново с новым паролем
+            updated_user = authenticate(request, email=user.email, password=new_password)
+            if updated_user:
+                login(request, updated_user)
             return redirect('success')
+
     else:
-        form = CustomPasswordChangeForm(request.user)
-    return render(
-        request,
-        'change_password.html',
-        {'form': form},
-    )
+        form = NewPasswordChangeForm(request.user)
+
+    return render(request, 'change_password.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 
 def success(request):

@@ -10,7 +10,7 @@ class Task(models.Model):
     author = models.ForeignKey(get_user_model(),
                                default=None,
                                on_delete=models.CASCADE,
-                               related_name='tasks',
+                               related_name='tasks_author',
                                verbose_name='author',
                                db_index=True)
     date_created = models.DateTimeField(

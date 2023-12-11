@@ -63,9 +63,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'user_name'  # измените 'email' на 'user_name'
-    EMAIL_FIELD = 'email'  # опционально, если вы также хотите использовать поле email для аутентификации
-    REQUIRED_FIELDS = ['email']  # добавьте поле email в список REQUIRED_FIELDS
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def get_full_name(self):
         """

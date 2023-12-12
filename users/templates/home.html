@@ -6,6 +6,13 @@ Home
 <h1>Это простое приложение CRUD Task Meneger</h1>
 <h2>Для начала работы вам требуется зарегистрироваться вы это можете сделать по ссылке ниже</h2>
 <button onclick="redirectToRegistration()">Регистрация</button>
+<H1>Краткие новости из мира HABR</H1>
+{% for new in news %}
+<div align="left">
+    <h3><a href="{{ new.link }}">{{ new.title }}</a></h3>
+    {{ new.description | safe }}
+</div>
+{% endfor %}
 <script>
 function redirectToRegistration() {
   window.location.href = "{% url 'registration' %}";

@@ -1,16 +1,20 @@
 from django.contrib.auth import (login, logout,
-                                 authenticate, SESSION_KEY, BACKEND_SESSION_KEY, HASH_SESSION_KEY)
+                                 authenticate,)
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from .forms import (UserRegistrationForm, LoginForm,
                     UserUpdateForm, NewPasswordChangeForm)
 from django.contrib.auth.decorators import login_required
 from .models import UserModel
+from .habr_rss import HabrReader
+import asyncio
 
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    reader = HabrReader()
+    news = asyncio.run(reader.main())
+    return render(request, 'home.html', {'news': news[:10]})
 
 
 def register(request):

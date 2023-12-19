@@ -11,7 +11,7 @@ git clone https://github.com/VRameew/Test_CRUD_Web_APP.git
 1. Перейдите в папку проекта.
 2. Создайте файл .env и откройте его в текстовом редакторе.
 3. Укажите следующие переменные окружения в файле .env и установите их значения для вашей системы:
-
+```
 SECRET_KEY=your_secret_key
 DEBUG=True
 DB_NAME=your_database_name
@@ -19,7 +19,7 @@ DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_HOST=db
 DB_PORT=5432
-
+```
 *Примечание:* Проверьте, что значения переменных DB_NAME, DB_USER и DB_PASSWORD соответствуют вашим настройкам PostgreSQL.
 
 ### Шаг 3: Развертывание с помощью docker-compose
